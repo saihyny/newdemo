@@ -1,2 +1,1 @@
-this is navigator;o
-screenY HTMLAnchorElement
+console.dir(document);
