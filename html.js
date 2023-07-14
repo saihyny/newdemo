@@ -47,6 +47,12 @@ function addItem(e){
   // Append li to list
   itemList.appendChild(li);
 
+   // get user details
+   
+   localStorage.setItem('item',mergedText);
+   
+  
+
   // Clear input fields
   document.getElementById('item').value = '';
   document.getElementById('item2').value = '';
