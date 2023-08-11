@@ -1,88 +1,32 @@
-var form = document.getElementById('addForm');
-var itemList = document.getElementById('items');
-var filter = document.getElementById('filter');
+// var headerTitle= document.getElementById("main-header");
+// var header = document.getElementById("header-title");
+// headerTitle.textContent="hello"
+// header.style.borderBottom = "solid 3px #000";
+// var item= document.querySelector('#items li:nth-child(5)')
+// item.style.backgroundColor="green"
+// var items = document.getElementsByClassName("list-group-item");
+// items[2].style.backgroundColor="green";
+// for(var i=0;i<items.length;i++)
+// {
+//     items[i].style.fontWeight="bold";
+// }
 
-// Form submit event
-form.addEventListener('submit', addItem);
-// Delete event
-itemList.addEventListener('click', removeItem);
-// Filter event
-filter.addEventListener('keyup', filterItems);
+// var li=document.getElementsByTagName('li');
+// li[5].style.backgroundColor='yellow';
 
-function addItem(e){
-  e.preventDefault();
+// query selctor
+var second = document.querySelector('.list-group-item:nth-child(2)');
+second.style.backgroundColor='green'
+var third = document.querySelector('.list-group-item:nth-child(3)')
+third.style.color='white'
 
-  // Get input values
-  var newItem = document.getElementById('item').value;
-  var newitem2 = document.getElementById('item2').value;
-  
-  // Merge input values
-  var mergedText = newItem + ' ' + newitem2;
+// querySelector all
+var sec= document.querySelectorAll('.list-group-item');
 
-  // Create new li element
-  var li = document.createElement('li');
+sec[1].style.color = 'green';
+var odd= document.querySelectorAll('.list-group-item:nth-child(odd)');
 
-  // Add class
-  li.className = 'list-group-item';
-
-  // Add text node with merged input value
-  li.appendChild(document.createTextNode(mergedText));
-
-  // Create del,edit button element
-  var deleteBtn = document.createElement('button');
-  var editbtn = document.createElement('button');
-
-  // Add classes to del,edit button
-  deleteBtn.className = 'btn btn-danger btn-sm float-right delete';
-  editbtn.className = "btn btn-edit btn-sm float-right";
-
-  // Append text node
-  deleteBtn.appendChild(document.createTextNode('X'));
-  editbtn.appendChild(document.createTextNode('edit'));
-
-  // Append buttons to li
-  li.appendChild(deleteBtn);
-  li.appendChild(editbtn);
-
-  // Append li to list
-  itemList.appendChild(li);
-
-   // get user details
-   
-   localStorage.setItem('item',mergedText);
-   
-  
-
-  // Clear input fields
-  document.getElementById('item').value = '';
-  document.getElementById('item2').value = '';
-}
-
-// Remove item
-function removeItem(e){
-  if(e.target.classList.contains('delete')){
-    if(confirm('Are You Sure?')){
-      var li = e.target.parentElement;
-      itemList.removeChild(li);
-    }
-  }
-}
-
-
-
-// Filter Items
-function filterItems(e){
-  // convert text to lowercase
-  var text = e.target.value.toLowerCase();
-  // Get lis
-  var items = itemList.getElementsByTagName('li');
-  // Convert to an array
-  Array.from(items).forEach(function(item){
-    var itemName = item.firstChild.textContent;
-    if(itemName.toLowerCase().indexOf(text) != -1){
-      item.style.display = 'block';
-    } else {
-      item.style.display = 'none';
-    }
-  });
+for(var i=0;i<sec.length;i++)
+{
+    odd[i].style.backgroundColor='green'
 }

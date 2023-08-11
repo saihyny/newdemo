@@ -1,67 +1,92 @@
-var itemList = document.getElementById('list-group');
+var farm = document.getElementById("addForm")
 var form = document.getElementById('addForm');
+var itemList = document.getElementById('items');
+var filter = document.getElementById('filter');
 
-form.addEventListener("submit", addItem);
-itemList.addEventListener('click', removeOrEditItem);
+// Form submit event
+form.addEventListener('submit', addItem);
+// Delete event
+itemList.addEventListener('click', removeItem);
+// Filter event
+filter.addEventListener('keyup', filterItems);
 
-function addItem(e) {
-    e.preventDefault();
+function addItem(e){
+  e.preventDefault();
 
-    var name2 = document.getElementById('username').value;
-    var number = document.getElementById('mobile').value;
-    var email = document.getElementById('email').value;
-    var mergedText = name2 + "-" + number + "-" + email;
+  // Get input values
+  var newItem = document.getElementById('item').value;
+  var newitem2 = document.getElementById('item2').value;
+  
+  // Merge input values
+  var mergedText = newItem + ' ' + newitem2;
 
-    var li = document.createElement("li");
-    li.className = "list-group-item";
-    li.appendChild(document.createTextNode(mergedText));
+  // Create new li element
+  var li = document.createElement('li');
 
-    var deleteBtn = document.createElement("button");
-    deleteBtn.className = "btn btn-sm float-right delete";
-    deleteBtn.appendChild(document.createTextNode('delete'));
-    li.appendChild(deleteBtn);
+  // Add class
+  li.className = 'list-group-item';
 
-    var editBtn = document.createElement('button');
-    editBtn.className = 'btn btn-sm float-right edit';
-    editBtn.appendChild(document.createTextNode("edit"));
-    li.appendChild(editBtn);
+  // Add text node with merged input value
+  li.appendChild(document.createTextNode(mergedText));
 
-    itemList.appendChild(li);
+  // Create del,edit button element
+  var deleteBtn = document.createElement('button');
+  var editbtn = document.createElement('button');
 
-    document.getElementById("username").value = "";
-    document.getElementById("mobile").value = "";
-    document.getElementById("email").value = "";
+  // Add classes to del,edit button
+  deleteBtn.className = 'btn btn-danger btn-sm float-right delete';
+  editbtn.className = "btn btn-edit btn-sm float-right";
 
-    localStorage.setItem(email, mergedText);
+  // Append text node
+  deleteBtn.appendChild(document.createTextNode('X'));
+  editbtn.appendChild(document.createTextNode('edit'));
+
+  // Append buttons to li
+  li.appendChild(deleteBtn);
+  li.appendChild(editbtn);
+
+  // Append li to list
+  itemList.appendChild(li);
+
+   // get user details
+   
+   localStorage.setItem('item',mergedText);
+   
+  
+
+  // Clear input fields
+  document.getElementById('item').value = '';
+  document.getElementById('item2').value = '';
 }
 
-function removeOrEditItem(e) {
-    if (e.target.classList.contains('delete')) {
-      
-            var li = e.target.parentElement;
-            itemList.removeChild(li);
-            var mergedText = li.firstChild.nodeValue;
-            var email = mergedText.split('-')[2].trim();
-            localStorage.removeItem(email);
-        
-    } else if (e.target.classList.contains('edit')) {
-        
-            var li = e.target.parentElement;
-            var mergedText = li.firstChild.nodeValue;
-            var email = mergedText.split('-')[2].trim();
-
-            var nameInput = document.getElementById('username');
-            var numInput = document.getElementById('mobile');
-            var emailInput = document.getElementById('email');
-
-            nameInput.value = mergedText.split('-')[0].trim();
-            numInput.value = mergedText.split('-')[1].trim();
-            emailInput.value = email;
-
-            itemList.removeChild(li);
-            localStorage.removeItem(email);
-        }
+// Remove item
+function removeItem(e){
+  if(e.target.classList.contains('delete')){
+    if(confirm('Are You Sure?')){
+      var li = e.target.parentElement;
+      itemList.removeChild(li);
     }
+  }
+}
+
+
+
+// Filter Items
+function filterItems(e){
+  // convert text to lowercase
+  var text = e.target.value.toLowerCase();
+  // Get lis
+  var items = itemList.getElementsByTagName('li');
+  // Convert to an array
+  Array.from(items).forEach(function(item){
+    var itemName = item.firstChild.textContent;
+    if(itemName.toLowerCase().indexOf(text) != -1){
+      item.style.display = 'block';
+    } else {
+      item.style.display = 'none';
+    }
+  });
+}
 
 
 
