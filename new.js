@@ -2,7 +2,8 @@ var form = document.getElementById('addform');
 var itemlist = document.getElementById('ul');
 
 form.addEventListener('submit', addItem);
-itemlist.addEventListener('click', removeItem);
+
+itemlist.addEventListener('click', removeOrEditItem);
 
 function addItem(e) {
     e.preventDefault();
@@ -11,29 +12,68 @@ function addItem(e) {
     var email1 = document.getElementById('email').value;
     var number1 = document.getElementById('number').value;
 
-    var mergedtxt = name1 + " " + email1 + " " + number1;
+    var mergedText = name1 + " " + email1 + " " + number1;
 
-    var newli = document.createElement('li');
-    newli.className = 'list-group-item';
-    newli.appendChild(document.createTextNode(mergedtxt));
+          //  CREATE NEW LI ELEMENT
+    var li = document.createElement('li');
+    li.className = 'list-group-item';
+    li.appendChild(document.createTextNode(mergedText));
 
+        //  CREATE DELETE BUTTON
     var deletebtn = document.createElement('button');
-    deletebtn.className = 'delete';
+    deletebtn.className = 'btn btn-sm float-right delete';
     deletebtn.appendChild(document.createTextNode('Delete'));
 
-    newli.appendChild(deletebtn);
-    itemlist.appendChild(newli);
+        // CREATE EDIT BUTTON
+    var editbtn= document.createElement('button')
+    editbtn.className = 'btn btn-sm float-right edit'
+    editbtn.appendChild(document.createTextNode('edit'))
 
-    localStorage.setItem(name1, mergedtxt);
+        // APPEND DELETE BUTTONs INTO LI
+    li.appendChild(deletebtn);
+    li.appendChild(editbtn)
+    itemlist.appendChild(li);
+
+    document.getElementById("name").value = "";
+    document.getElementById("email").value = "";
+    document.getElementById("number").value = "";
+  
+   
+    localStorage.setItem(email1, mergedText)
 }
 
 // Remove item
-function removeItem(e) {
+function removeOrEditItem(e) {
     if (e.target.classList.contains('delete')) {
-        if (confirm('Are You Sure?')) {
-            var listItem = e.target.parentElement;
-            listItem.parentNode.removeChild(listItem);
+        var li = e.target.parentElement;
+        itemlist.removeChild(li);
+        var mergedText = li.firstChild.nodeValue;
+        var emailPart = mergedText.split('-')[2];
+        if (emailPart) {
+            var email = emailPart.trim();
+            localStorage.removeItem(email);
         }
+    } else if (e.target.classList.contains('edit')) {
+        var li = e.target.parentElement;
+        var mergedText = li.firstChild.nodeValue;
+        var email = mergedText.split(' ')[1]; // Assuming mergedText is "name email number"
+    
+        var nameInput = document.getElementById('name');
+        var numInput = document.getElementById('number');
+        var emailInput = document.getElementById('email');
+    
+        var parts = mergedText.split(' ');
+        nameInput.value = parts[0].trim();
+        numInput.value = parts[2].trim();
+        emailInput.value = email;
+    
+        // Optionally, you can remove the item from the list and Local Storage
+        // and allow the user to re-add the edited item.
+        itemlist.removeChild(li);
+        localStorage.removeItem(email);
     }
+    
 }
+
+
 
