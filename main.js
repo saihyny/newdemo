@@ -57,8 +57,12 @@ li.appendChild(edit)
 
   // Append li to list
   itemList.appendChild(li);
-
-  localStorage.setItem(newItem,merged);
+ let new_obj = {
+     name1 : newItem,
+     name2 : newItem2
+ }
+var newobj2 = JSON.stringify(new_obj);
+ localStorage.setItem(newItem,newobj2);
 }
 
 // Remove item
