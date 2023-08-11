@@ -57,6 +57,8 @@ li.appendChild(edit)
 
   // Append li to list
   itemList.appendChild(li);
+
+  localStorage.setItem(newItem,merged);
 }
 
 // Remove item
