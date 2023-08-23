@@ -1,92 +1,82 @@
-var farm = document.getElementById("addForm")
-var form = document.getElementById('addForm');
-var itemList = document.getElementById('items');
-var filter = document.getElementById('filter');
+const form = document.getElementById("addForm")
+const itemlist = document.getElementById("list-group")
 
-// Form submit event
+
 form.addEventListener('submit', addItem);
-// Delete event
-itemList.addEventListener('click', removeItem);
-// Filter event
-filter.addEventListener('keyup', filterItems);
 
-function addItem(e){
-  e.preventDefault();
+itemlist.addEventListener('click', removeOrEditItem);
 
-  // Get input values
-  var newItem = document.getElementById('item').value;
-  var newitem2 = document.getElementById('item2').value;
-  
-  // Merge input values
-  var mergedText = newItem + ' ' + newitem2;
+function addItem(e) {
+    e.preventDefault();
 
-  // Create new li element
-  var li = document.createElement('li');
+    var name1 = document.getElementById('username').value;
+    var email1 = document.getElementById('discription').value;
+    var number1 = document.getElementById('catagory').value;
 
-  // Add class
-  li.className = 'list-group-item';
+    var mergedText = name1 + " " + email1 + " " + number1;
 
-  // Add text node with merged input value
-  li.appendChild(document.createTextNode(mergedText));
+          //  CREATE NEW LI ELEMENT
+    var li = document.createElement('li');
+    li.className = 'list-group-item';
+    li.appendChild(document.createTextNode(mergedText));
 
-  // Create del,edit button element
-  var deleteBtn = document.createElement('button');
-  var editbtn = document.createElement('button');
+        //  CREATE DELETE BUTTON
+    var deletebtn = document.createElement('button');
+    deletebtn.className = 'btn btn-sm float-right delete';
+    deletebtn.appendChild(document.createTextNode('Delete'));
 
-  // Add classes to del,edit button
-  deleteBtn.className = 'btn btn-danger btn-sm float-right delete';
-  editbtn.className = "btn btn-edit btn-sm float-right";
+        // CREATE EDIT BUTTON
+    var editbtn= document.createElement('button')
+    editbtn.className = 'btn btn-sm float-right edit'
+    editbtn.appendChild(document.createTextNode('edit'))
 
-  // Append text node
-  deleteBtn.appendChild(document.createTextNode('X'));
-  editbtn.appendChild(document.createTextNode('edit'));
+        // APPEND DELETE BUTTONs INTO LI
+    li.appendChild(deletebtn);
+    li.appendChild(editbtn)
+    itemlist.appendChild(li);
 
-  // Append buttons to li
-  li.appendChild(deleteBtn);
-  li.appendChild(editbtn);
-
-  // Append li to list
-  itemList.appendChild(li);
-
-   // get user details
+    document.getElementById("username").value = "";
    
-   localStorage.setItem('item',mergedText);
+    document.getElementById("discription").value = "";
    
-  
-
-  // Clear input fields
-  document.getElementById('item').value = '';
-  document.getElementById('item2').value = '';
+    localStorage.setItem(email1, mergedText)
 }
 
 // Remove item
-function removeItem(e){
-  if(e.target.classList.contains('delete')){
-    if(confirm('Are You Sure?')){
-      var li = e.target.parentElement;
-      itemList.removeChild(li);
+function removeOrEditItem(e) {
+    if (e.target.classList.contains('delete')) {
+        var li = e.target.parentElement;
+        itemlist.removeChild(li);
+        var mergedText = li.firstChild.nodeValue;
+        var emailPart = mergedText.split('-')[2];
+        if (emailPart) {
+            var email = emailPart.trim();
+            localStorage.removeItem(email);
+            
+   
+        }
+    } else if (e.target.classList.contains('edit')) {
+        var li = e.target.parentElement;
+        var mergedText = li.firstChild.nodeValue;
+        var email = mergedText.split(' ')[1]; // Assuming mergedText is "name email number"
+    
+        var nameInput = document.getElementById('username');
+        var numInput = document.getElementById('catagory');
+        var emailInput = document.getElementById('discription');
+    
+        var parts = mergedText.split(' ');
+        nameInput.value = parts[0].trim();
+        numInput.value = parts[2].trim();
+        emailInput.value = email;
+    
+        // Optionally, you can remove the item from the list and Local Storage
+        // and allow the user to re-add the edited item.
+        itemlist.removeChild(li);
+        localStorage.removeItem(email);
     }
-  }
+    
 }
 
-
-
-// Filter Items
-function filterItems(e){
-  // convert text to lowercase
-  var text = e.target.value.toLowerCase();
-  // Get lis
-  var items = itemList.getElementsByTagName('li');
-  // Convert to an array
-  Array.from(items).forEach(function(item){
-    var itemName = item.firstChild.textContent;
-    if(itemName.toLowerCase().indexOf(text) != -1){
-      item.style.display = 'block';
-    } else {
-      item.style.display = 'none';
-    }
-  });
-}
 
 
 
