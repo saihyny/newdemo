@@ -12,8 +12,12 @@ function addItem(e) {
     var email1 = document.getElementById('email').value;
     var number1 = document.getElementById('number').value;
 
-    var mergedText = name1 + " " + email1 + " " + number1;
+var obj = {}
+obj.property1 = name1;
+obj.property2 = email1;
+obj.property3 = number1;
 
+var mergedText=obj.property1+ +obj.property2+ +obj.property3
           //  CREATE NEW LI ELEMENT
     var li = document.createElement('li');
     li.className = 'list-group-item';
@@ -38,8 +42,18 @@ function addItem(e) {
     document.getElementById("email").value = "";
     document.getElementById("number").value = "";
   
+
+axios.post("https://crudcrud.com/api/67460808a5974bd38b6fb36e4bed6f54/sharpner", obj)
+.then((respone)=>{
    
-    localStorage.setItem(email1, mergedText)
+})
+.catch((err)=>{
+    document.body.innerHTML=document.body.innerHTML+"<h4> somthing went wrong</h4>"
+    console.log(err)
+})
+    
+   
+    // localStorage.setItem(email1, mergedText)
 }
 
 // Remove item
@@ -47,12 +61,8 @@ function removeOrEditItem(e) {
     if (e.target.classList.contains('delete')) {
         var li = e.target.parentElement;
         itemlist.removeChild(li);
-        var mergedText = li.firstChild.nodeValue;
-        var emailPart = mergedText.split('-')[2];
-        if (emailPart) {
-            var email = emailPart.trim();
-            localStorage.removeItem(email);
-        }
+       
+      
     } else if (e.target.classList.contains('edit')) {
         var li = e.target.parentElement;
         var mergedText = li.firstChild.nodeValue;
