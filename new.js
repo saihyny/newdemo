@@ -16,7 +16,7 @@ function addItem(e) {
         number: number1
     };
 
-    axios.post("https://crudcrud.com/api/be2e43bc3fa44fcda56104f7c567abb8/sai", newUser)
+    axios.post("https://crudcrud.com/api/5b896b1c10e64957b0813e6194f0f077/sai", newUser)
         .then((response) => {
             newUser._id = response.data._id; // Set the newly created user's _id
             userList.push(newUser); // Add user to the list
@@ -33,7 +33,7 @@ function addItem(e) {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-    axios.get("https://crudcrud.com/api/be2e43bc3fa44fcda56104f7c567abb8/sai")
+    axios.get("https://crudcrud.com/api/5b896b1c10e64957b0813e6194f0f077/sai")
         .then((resolve) => {
             userList = resolve.data; // Store the retrieved user list
             showUsers(); // Display users on page load
@@ -58,19 +58,26 @@ function showUsers() {
         deletebtn.className = 'btn btn-sm float-right delete';
         deletebtn.appendChild(document.createTextNode('Delete'));
 
+        
+        var editbtn = document.createElement('button');
+        editbtn.className = 'btn btn-sm float-right edit';
+        editbtn.appendChild(document.createTextNode('edit'));
+
         li.appendChild(deletebtn);
+        li.appendChild(editbtn);
         itemlist.appendChild(li);
+        
     });
 }
 
 itemlist.addEventListener('click', removeOrEditItem);
 
-function removeOrEditItem(e) {
+async function removeOrEditItem(e) {
     if (e.target.classList.contains('delete')) {
         var li = e.target.parentElement;
         var itemId = li.getAttribute('data-id');
 
-        axios.delete(`https://crudcrud.com/api/be2e43bc3fa44fcda56104f7c567abb8/sai/${itemId}`)
+        axios.delete(`https://crudcrud.com/api/5b896b1c10e64957b0813e6194f0f077/sai/${itemId}`)
             .then(() => {
                 userList = userList.filter(user => user._id !== itemId); // Remove from local list
                 showUsers(); // Refresh the user list
@@ -78,8 +85,31 @@ function removeOrEditItem(e) {
             .catch((error) => {
                 console.error(error);
             });
-    }
+
+        }
     // Add code here for edit functionality if needed
+    else if(e.target.classList.contains('edit')){
+       
+            nam= document.getElementById("name")
+            ema= document.getElementById("email")
+            num= document.getElementById("number") 
+                nam.value=userList[0].name;
+               ema.value=userList[0].email;
+               num.value=userList[0].number;
+       
+        var li = e.target.parentElement;
+         var itemId = li.getAttribute('data-id');
+
+        axios.delete(`https://crudcrud.com/api/5b896b1c10e64957b0813e6194f0f077/sai/${itemId}`)
+            .then(() => {
+                userList = userList.filter(user => user._id !== itemId); // Remove from local list
+                showUsers(); // Refresh the user list
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
+    }
 }
 
     
