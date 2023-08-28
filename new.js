@@ -1,10 +1,8 @@
 var form = document.getElementById('addform');
 var itemlist = document.getElementById('ul');
+var userList = []; // Maintain a list of users
 
 form.addEventListener('submit', addItem);
-
-
-
 
 function addItem(e) {
     e.preventDefault();
@@ -12,99 +10,77 @@ function addItem(e) {
     var name1 = document.getElementById('name').value;
     var email1 = document.getElementById('email').value;
     var number1 = document.getElementById('number').value;
+    let newUser = {
+        name: name1,
+        email: email1,
+        number: number1
+    };
 
-let obj = {}
-obj.property1 = name1;
-obj.property2 = email1;
-obj.property3 = number1;
+    axios.post("https://crudcrud.com/api/be2e43bc3fa44fcda56104f7c567abb8/sai", newUser)
+        .then((response) => {
+            newUser._id = response.data._id; // Set the newly created user's _id
+            userList.push(newUser); // Add user to the list
+            showUsers(); // Refresh the user list
+        })
+        .catch((error) => {
+            console.error(error);
+        });
 
-let mergedText=obj.property1+' '+obj.property2+' '+obj.property3;
-          //  CREATE NEW LI ELEMENT
-    var li = document.createElement('li');
-    li.className = 'list-group-item';
-    li.appendChild(document.createTextNode(mergedText));
-
-        //  CREATE DELETE BUTTON
-    var deletebtn = document.createElement('button');
-    deletebtn.className = 'btn btn-sm float-right delete';
-    deletebtn.appendChild(document.createTextNode('Delete'));
-
-        // CREATE EDIT BUTTON
-    var editbtn= document.createElement('button')
-    editbtn.className = 'btn btn-sm float-right edit'
-    editbtn.appendChild(document.createTextNode('edit'))
-
-        // APPEND DELETE BUTTONs INTO LI
-    li.appendChild(deletebtn);
-    li.appendChild(editbtn)
-    itemlist.appendChild(li);
-
+    // Clear input fields
     document.getElementById("name").value = "";
     document.getElementById("email").value = "";
     document.getElementById("number").value = "";
-  
-
-axios.post("https://crudcrud.com/api/d16bf43cc04e4385a8dd4a5d9b9e7c4a/sai", obj)
-.then((resolve)=>{
-    console.log(resolve)
-})
-.then((reject)=>{
-    console.log(reject)
-})
-
 }
 
-window.addEventListener("DOMContentLoaded", ()=>{
-    axios.get("https://crudcrud.com/api/d16bf43cc04e4385a8dd4a5d9b9e7c4a/sai")
-    .then((resolve)=>{
-        
-        for(var i=0;i<resolve.data.length;i++)
-        {
-            showuserOn(resolve.data[i])
-        }
-    })
-    .then((reject)=>{
-        console.log(reject)
-    })
+window.addEventListener("DOMContentLoaded", () => {
+    axios.get("https://crudcrud.com/api/be2e43bc3fa44fcda56104f7c567abb8/sai")
+        .then((resolve) => {
+            userList = resolve.data; // Store the retrieved user list
+            showUsers(); // Display users on page load
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+});
+
+function showUsers() {
+    itemlist.innerHTML = ""; // Clear existing list
+
+    userList.forEach((user) => {
+        var mergedText = user.name + ' ' + user.email + ' ' + user.number;
+
+        var li = document.createElement('li');
+        li.className = 'list-group-item';
+        li.setAttribute('data-id', user._id);
+        li.appendChild(document.createTextNode(mergedText));
+
+        var deletebtn = document.createElement('button');
+        deletebtn.className = 'btn btn-sm float-right delete';
+        deletebtn.appendChild(document.createTextNode('Delete'));
+
+        li.appendChild(deletebtn);
+        itemlist.appendChild(li);
+    });
+}
+
+itemlist.addEventListener('click', removeOrEditItem);
+
+function removeOrEditItem(e) {
+    if (e.target.classList.contains('delete')) {
+        var li = e.target.parentElement;
+        var itemId = li.getAttribute('data-id');
+
+        axios.delete(`https://crudcrud.com/api/be2e43bc3fa44fcda56104f7c567abb8/sai/${itemId}`)
+            .then(() => {
+                userList = userList.filter(user => user._id !== itemId); // Remove from local list
+                showUsers(); // Refresh the user list
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }
+    // Add code here for edit functionality if needed
+}
+
     
-})
 
-   
-    // localStorage.setItem(email1, mergedText)
-
-
-function showuserOn(user){
-    var name1 = document.getElementById('name').value=''
-    var email1 = document.getElementById('email').value=''
-    var number1 = document.getElementById('number').value=''
-console.log(user)
-let obj = {}
-obj.property1 = user.property1
-obj.property2 = user.property2
-obj.property3 = user.property3
-
-let mergedText=obj.property1+' '+obj.property2+' '+obj.property3;
-          //  CREATE NEW LI ELEMENT
-    var li = document.createElement('li');
-    li.className = 'list-group-item';
-    li.appendChild(document.createTextNode(mergedText));
-
-        //  CREATE DELETE BUTTON
-    var deletebtn = document.createElement('button');
-    deletebtn.className = 'btn btn-sm float-right delete';
-    deletebtn.appendChild(document.createTextNode('Delete'));
-
-        // CREATE EDIT BUTTON
-    var editbtn= document.createElement('button')
-    editbtn.className = 'btn btn-sm float-right edit'
-    editbtn.appendChild(document.createTextNode('edit'))
-
-        // APPEND DELETE BUTTONs INTO LI
-    li.appendChild(deletebtn);
-    li.appendChild(editbtn)
-    itemlist.appendChild(li); 
-}
-if(itemlist.length<0)
-{
-    showuserOn()
-}
