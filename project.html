@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <title>Todo App</title>
+</head>
+<body>
+    <div class="container  bg-primary" >
+        <form id="addform">
+            <input type="text" id="todoinput" placeholder="Todo">
+            <input type="text" id="descriptioninput" placeholder="Description"> 
+            <button class="submit flaot-right">Button</button>
+        </form>
+    
+    <br>
+    <br>  
+    <h2>Todos remaining</h2>
+    <ul class="list-group" id="ul1">
+    </ul>
+    <br>
+    <br>
+    <h2>Todos done</h2>
+    <ul class="list-group" id="ul2">
+    </ul>
+    <br>
+</div>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="project.js"></script>
+</body>
+</html>
